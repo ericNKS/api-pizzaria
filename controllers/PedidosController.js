@@ -2,37 +2,40 @@ require('dotenv').config();
 
 let bcrypt = require('bcrypt');
 const Pedido = require('../models/Pedido');
+const PedidoSabor = require('../models/PedidoSabor');
 
 class PedidosController
 {
     async index(req,res){
         try {
             let resultado = await Pedido.findAll();
-            if(resultado != false){
+            if(resultado.length > 0){
                 res.status(200).json({success: resultado});
             }else{
-                res.status(400).json({err: "Aconteu um erro inesperado"});
+                res.status(200).json({success: "Nenhum pedido encontrado"});
             }
         } catch (error) {
             res.status(400).json({err: "Aconteceu um erro inesperado"});
         }
-        res.json({success: true});
     }
 
     async create(req,res){
         let user = req.userData;
-        let {pizza_id} = req.body;
+        let {pizza_id, sabores_id} = req.body;
         try {
             let resultado = await Pedido.create(user.id, pizza_id);
-            if(resultado != false){
-                res.status(200).json({success: resultado});
+            if(resultado.length > 0){
+                let pedidoId = resultado[0];
+                sabores_id.forEach(async saborId => {
+                    let addSabor = await PedidoSabor.create(pedidoId, saborId);
+                });
+                res.status(200).json({success: "Pedido Realizado com sucesso"});
             }else{
                 res.status(400).json({err: "Aconteu um erro inesperado"});
             }
         } catch (error) {
             res.status(400).json({err: "Aconteu um erro inesperado"});
         }
-        res.json({success: true});
     }
 
     async update(req,res){

@@ -7,6 +7,7 @@ var PizzaController = require('../controllers/PizzaController');
 let Auth = require('../middleware/Auth');
 let AuthAdmin = require('../middleware/AuthAdmin');
 const SaborController = require("../controllers/SaborController");
+const PedidosController = require("../controllers/PedidosController");
 
 routes.get('/', (req,res)=>{
     res.json({
@@ -23,11 +24,15 @@ routes.post('/api/user/endereco', Auth, EnderecoController.adicionar);
 routes.post('/api/pizza', AuthAdmin, PizzaController.adicionar);
 routes.get('/api/pizza', PizzaController.show);
 routes.put('/api/pizza', AuthAdmin, PizzaController.update);
-//
-//routes.get('/api/pedidos', PedidosController.index);
+// Sabores
 routes.post('/api/sabores', AuthAdmin, SaborController.create);
 routes.get('/api/sabores', SaborController.index);
 routes.put('/api/sabores', SaborController.update);
+
+// Pedidos
+routes.get('/api/pedidos', AuthAdmin, PedidosController.index);
+routes.post('/api/pedidos', Auth, PedidosController.create);
+routes.post('/api/pedidos', AuthAdmin, PedidosController.update);
 
 
 module.exports = routes;

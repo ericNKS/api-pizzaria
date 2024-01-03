@@ -33,7 +33,10 @@ class User{
     async findById(id)
     {
         try {
-            let result = await knex.select(['users.id', 'users.email', 'endereco.id as endereco_id', 'endereco.cep', 'endereco.logradouro', 'endereco.complemento', 'endereco.bairro', 'endereco.localidade', 'endereco.uf', 'endereco.user_id']).where('users.id', id).table('users').leftJoin('endereco', 'endereco.user_id', 'users.id');
+            let result = await knex.select(['users.id', 'users.email', 'endereco.id as endereco_id', 'endereco.cep', 'endereco.logradouro', 'endereco.complemento', 'endereco.bairro', 'endereco.localidade', 'endereco.uf', 'endereco.user_id'])
+                .where('users.id', id)
+                .table('users')
+                .leftJoin('endereco', 'endereco.user_id', 'users.id');
             if(result.length > 0){
                 return result;
             }else{
